@@ -1,0 +1,205 @@
+{
+  "name": "agentic-ide",
+  "displayName": "Agentic IDE",
+  "description": "Agent-first AI development environment with multi-modal LLM support",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.95.0",
+    "node": ">=18.0.0"
+  },
+  "categories": [
+    "AI",
+    "Developer Tools",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "development",
+    "coding",
+    "automation"
+  ],
+  "author": "Agentic IDE Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/agentic-ide.git"
+  },
+  "main": "./dist/extension.js",
+  "type": "module",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.22.0",
+    "langchain": "^0.1.0",
+    "js-yaml": "^4.1.0"
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:agentic.initializeAgent",
+    "onCommand:agentic.startTask",
+    "onView:agenticAgentManager"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "agentic.initializeAgent",
+        "title": "Agentic: Initialize Agent",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.startTask",
+        "title": "Agentic: Start New Task",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.pauseAgent",
+        "title": "Agentic: Pause Agent",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.resumeAgent",
+        "title": "Agentic: Resume Agent",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.cancelTask",
+        "title": "Agentic: Cancel Task",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.selectModel",
+        "title": "Agentic: Select Model",
+        "category": "Agentic"
+      },
+      {
+        "command": "agentic.configureEndpoint",
+        "title": "Agentic: Configure LLM Endpoint",
+        "category": "Agentic"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "agenticAgentManager",
+          "name": "Agent Manager",
+          "when": "agentic:agentManagerEnabled"
+        },
+        {
+          "id": "agenticArtifacts",
+          "name": "Artifacts",
+          "when": "agentic:agentManagerEnabled"
+        },
+        {
+          "id": "agenticKnowledgeBase",
+          "name": "Knowledge Base",
+          "when": "agentic:agentManagerEnabled"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentic",
+          "title": "Agentic IDE",
+          "icon": "resources/agentic-icon.svg"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Agentic IDE",
+      "properties": {
+        "agentic.llm.endpoint": {
+          "type": "string",
+          "default": "http://localhost:8000/v1",
+          "description": "LLM API endpoint (OpenAI-compatible)"
+        },
+        "agentic.llm.apiKey": {
+          "type": "string",
+          "default": "sk-default",
+          "description": "API key for LLM endpoint",
+          "markdownDescription": "API key for LLM endpoint (stored securely)"
+        },
+        "agentic.llm.model": {
+          "type": "string",
+          "default": "default",
+          "description": "Default model name to use"
+        },
+        "agentic.llm.contextWindow": {
+          "type": "number",
+          "default": 8000,
+          "description": "Context window size for the model"
+        },
+        "agentic.llm.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Temperature for model sampling"
+        },
+        "agentic.llm.maxTokens": {
+          "type": "number",
+          "default": 4096,
+          "description": "Maximum tokens for model output"
+        },
+        "agentic.embedding.endpoint": {
+          "type": "string",
+          "default": "http://localhost:8000/v1",
+          "description": "Embedding API endpoint (OpenAI-compatible)"
+        },
+        "agentic.embedding.model": {
+          "type": "string",
+          "default": "default-embedding",
+          "description": "Embedding model name"
+        },
+        "agentic.database.url": {
+          "type": "string",
+          "default": "postgresql://localhost/agentic",
+          "description": "PostgreSQL database URL"
+        },
+        "agentic.agent.defaultMode": {
+          "type": "string",
+          "enum": [
+            "agent-driven",
+            "agent-assisted",
+            "review-driven",
+            "custom"
+          ],
+          "default": "agent-assisted",
+          "description": "Default agent execution mode"
+        },
+        "agentic.agent.enableBrowserAutomation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable browser automation for testing"
+        },
+        "agentic.agent.enableKnowledgeBase": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable knowledge base for context reuse"
+        }
+      }
+    }
+  }
+}

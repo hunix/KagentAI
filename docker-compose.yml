@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  agentic-ide:
+    build: .
+    container_name: agentic-ide
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      LLM_ENDPOINT: ${LLM_ENDPOINT:-http://localhost:8000/v1}
+      LLM_API_KEY: ${LLM_API_KEY:-sk-default}
+      LLM_MODEL: ${LLM_MODEL:-mistral}
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    networks:
+      - agentic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Optional: LM Studio container (for local LLM)
+  lm-studio:
+    image: lmstudio:latest
+    container_name: lm-studio
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models
+    networks:
+      - agentic-network
+    restart: unless-stopped
+    profiles:
+      - with-lm-studio
+
+networks:
+  agentic-network:
+    driver: bridge
+
+volumes:
+  data:
+  config:
