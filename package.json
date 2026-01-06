@@ -1,8 +1,8 @@
 {
-  "name": "agentic-ide",
-  "displayName": "Agentic IDE",
-  "description": "Agent-first AI development environment with multi-modal LLM support",
-  "version": "0.1.0",
+  "name": "kagentai",
+  "displayName": "KagentAI",
+  "description": "Production-grade multi-agent AI development environment for any LLM",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.95.0",
     "node": ">=18.0.0"
@@ -20,11 +20,11 @@
     "coding",
     "automation"
   ],
-  "author": "Agentic IDE Contributors",
+  "author": "hunix",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/agentic-ide.git"
+    "url": "https://github.com/hunix/KagentAI.git"
   },
   "main": "./dist/extension.js",
   "type": "module",
